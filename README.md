@@ -6,20 +6,24 @@
 * Install VirtualBox: [Virtual download page](https://www.virtualbox.org/wiki/Downloads).
 * Install Vagrant: [Vagrant download page](http://www.vagrantup.com/downloads.html).
 * Install Vagrant Guest Additions Plugin
-```vagrant plugin install vbguest
+```
+vagrant plugin install vbguest
 ```
 
 #### Check out the repository
-```git clone https://github.com/xuwang/docker-dev
+```
+git clone https://github.com/xuwang/docker-dev
 cd docker-dev
 ```
 
 #### Fire Up VM and Update Dockers
-```vagrent up			# bring up the VM and provisioning docker containers
+```
+vagrent up			# bring up the VM and provisioning docker containers
 ```
 
 #### Check docker status.
-```./bin/vdock status
+```
+./bin/vdock status
 ```
 
 ### Configure The Docker Web UI: Shipyard
@@ -30,7 +34,8 @@ cd docker-dev
 
 ### Update, Stop, Tear Down, Etc.
 
-```vagrant provision		# pull all the images from the server and update containers
+```
+vagrant provision		# pull all the images from the server and update containers
 vagrant ssh					# ssh to the docker VM
 vagrant halt				# bring down the VM
 vagrant destroy         	# destroy the VM
