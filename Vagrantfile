@@ -28,7 +28,7 @@ Vagrant::VERSION >= "1.6.3" and Vagrant::Config.run do |config|
   # Installing Docker (latest) onto machine
   config.vm.provision :docker do |d|
   end
-  config.vm.provision :shell, :inline => "/vagrant/bin/dock stop; /vagrant/bin/dock update && /vagrant/bin/dock start" 
+  config.vm.provision :shell, :inline => "sudo /vagrant/bin/dock stop; sudo /vagrant/bin/dock update && sudo /vagrant/bin/dock start" 
 end
   
 

@@ -6,9 +6,19 @@ APPS=${APPS:-/mnt/apps}
 
 . $DIR/env.sh
 
+# get ids of all containers that matches $1
+app_ids(){
+    if [ -z $1 ]
+    then    
+        docker ps -a -q
+    else
+        docker ps -a | awk '{ print $1,$2}' | grep $1 | awk '{ print $1 }'
+    fi
+}
+
 killz(){
-	echo "Killing all docker containers:"
-	docker ps -a
+	echo "Killing all docker containers: $1"
+	ids=`app_ids $1`
 	ids=`docker ps -a -q`
 	if [ -n "$ids" ]; then
 		echo $ids | xargs docker kill
@@ -17,35 +27,38 @@ killz(){
 }
 
 stop(){
-	echo "Stopping all docker containers:"
-	docker ps -a
-	ids=`docker ps -a -q`
+    echo "Stopping all docker containers: $1"
+	ids=`app_ids $1`
 	if [ -n "$ids" ]; then
 		echo $ids | xargs docker stop
 		echo $ids | xargs docker rm
 	fi
 }
 
-start(){
-	mkdir -p $APPS/redis/data
-	mkdir -p $APPS/redis/logs
-	REDIS=$(docker run \
-		-p 6379:6379 \
-		-v $APPS/redis/data:/data \
-		-v $APPS/redis/logs:/logs \
-		--name redis \
-		-d \
-		$DOCKER_REPO/redis)
-	echo "Started REDIS in container $REDIS"
-	
-    # Wait until redis is ready
-    sleep 1;
-	until redis-cli ping | grep "PONG" &> /dev/null 
-	do 
-        echo Waiting for Redis
-	    sleep 2; 
-	done
-	
+start_redis(){
+    mkdir -p $APPS/redis/data
+    mkdir -p $APPS/redis/logs
+    REDIS=$(docker run \
+	    -p 6379:6379 \
+	    -v $APPS/redis/data:/data \
+	    -v $APPS/redis/logs:/logs \
+	    --name redis \
+	    -d \
+	    $DOCKER_REPO/redis)
+        # Wait until redis is ready
+        sleep 1;
+    	until redis-cli ping | grep "PONG" &> /dev/null 
+    	do 
+            echo Waiting for Redis
+    	    sleep 1; 
+    	done
+    echo "Started REDIS in container $REDIS"  
+}
+
+start_shipyard(){
+    
+    start_redis
+
 	SHIPYARD=$(docker run \
 		-p 8005:8000 \
 		-d \
@@ -72,34 +85,58 @@ start(){
 		--link shipyard:shipyard \
 		shipyard/agent)
 	echo "Started shipyard-agent in container $SHIPYARD_AGENT"
+}
 
-	sleep 1
+start_zookeeper(){
+    mkdir -p $APPS/zookeeper/data
+	mkdir -p $APPS/zookeeper/logs
+	ZOOKEEPER=$(docker run \
+		-d \
+		-p 2181:2181 \
+		-v $APPS/zookeeper/logs:/logs \
+		--name zookeeper \
+		$DOCKER_REPO/zookeeper)
+	echo "Started ZOOKEEPER in container $ZOOKEEPER"
+}
+
+start(){
+    start_shipyard
+    #start_zookeeper
+    
+	echo ============================================
 	echo All container started!
 	docker ps -a
-
 }
 
 update(){
 	apt-get install -y redis-tools
 	cp /vagrant/etc/docker.conf /etc/init/docker.conf
-	docker pull xuwang/redis:2.8.13
+	docker pull xuwang/redis:latest
 	docker pull shipyard/shipyard:latest
 	docker pull shipyard/agent:latest
+	#docker pull xuwang/zookeeper:latest
 }
 
 case "$1" in
 	restart)
-		stop
-		start
+		stop $2
+		start $2
 		;;
 	start)
-		start
+	    # start specific app defined in $2 or start all apps
+	    fn="start_$2"
+	    if type -t $fn | grep -q '^function$' 2>/dev/null
+	    then
+	        $fn
+	    else
+		    start
+		fi
 		;;
 	stop)
-		stop
+		stop $2
 		;;
 	kill)
-		killz
+		killz $2
 		;;
 	update)
 		update
