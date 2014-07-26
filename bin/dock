@@ -1,0 +1,114 @@
+#!/bin/bash
+set -e #-x
+
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+APPS=${APPS:-/mnt/apps}
+
+. $DIR/env.sh
+
+killz(){
+	echo "Killing all docker containers:"
+	docker ps -a
+	ids=`docker ps -a -q`
+	if [ -n "$ids" ]; then
+		echo $ids | xargs docker kill
+		echo $ids | xargs docker rm
+	fi
+}
+
+stop(){
+	echo "Stopping all docker containers:"
+	docker ps -a
+	ids=`docker ps -a -q`
+	if [ -n "$ids" ]; then
+		echo $ids | xargs docker stop
+		echo $ids | xargs docker rm
+	fi
+}
+
+start(){
+	mkdir -p $APPS/redis/data
+	mkdir -p $APPS/redis/logs
+	REDIS=$(docker run \
+		-p 6379:6379 \
+		-v $APPS/redis/data:/data \
+		-v $APPS/redis/logs:/logs \
+		--name redis \
+		-d \
+		$DOCKER_REPO/redis)
+	echo "Started REDIS in container $REDIS"
+	
+    # Wait until redis is ready
+    sleep 1;
+	until redis-cli ping | grep "PONG" &> /dev/null 
+	do 
+        echo Waiting for Redis
+	    sleep 2; 
+	done
+	
+	SHIPYARD=$(docker run \
+		-p 8005:8000 \
+		-d \
+		--name shipyard \
+		--link redis:redis \
+		shipyard/shipyard)
+	echo "Started shipyard in container $SHIPYARD"
+	
+	# Wait until shipyard is ready
+	sy_url=http://`docker inspect --format="{{ .NetworkSettings.IPAddress }}" shipyard`:8000
+	until curl -o /dev/null --silent --head --write-out '%{http_code}\n' $sy_url | grep "302" &> /dev/null 
+	do 
+        echo Waiting for Shipyard
+	    sleep 2; 
+	done
+	
+	SHIPYARD_AGENT=$(docker run \
+	    -d \
+		-v /var/run/docker.sock:/docker.sock \
+		-e IP=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{print $1;}'` \
+		-e URL='http://shipyard:8000' \
+		-p 4500:4500 \
+		--name shipyard-agent \
+		--link shipyard:shipyard \
+		shipyard/agent)
+	echo "Started shipyard-agent in container $SHIPYARD_AGENT"
+
+	sleep 1
+	echo All container started!
+	docker ps -a
+
+}
+
+update(){
+	apt-get install -y redis-tools
+	cp /vagrant/etc/docker.conf /etc/init/docker.conf
+	docker pull xuwang/redis
+	docker pull shipyard/shipyard
+	docker pull shipyard/agent
+}
+
+case "$1" in
+	restart)
+		stop
+		start
+		;;
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	kill)
+		killz
+		;;
+	update)
+		update
+		;;
+	status)
+		docker info
+		docker ps -a
+		;;
+	*)
+		echo $"Usage: $0 {start|stop|kill|update|restart|status}"
+		RETVAL=1
+esac
