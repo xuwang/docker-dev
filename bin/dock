@@ -82,9 +82,9 @@ start(){
 update(){
 	apt-get install -y redis-tools
 	cp /vagrant/etc/docker.conf /etc/init/docker.conf
-	docker pull xuwang/redis
-	docker pull shipyard/shipyard
-	docker pull shipyard/agent
+	docker pull xuwang/redis:2.8.13
+	docker pull shipyard/shipyard:latest
+	docker pull shipyard/agent:latest
 }
 
 case "$1" in
