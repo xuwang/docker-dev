@@ -56,6 +56,7 @@ start_test(){
 	--link redis:redis \
 	--link zookeeper:zookeeper \
 	--link kafka:kafka \
+	--link mysql:mysql \
     ubuntu bash -l
     )
 }
@@ -138,6 +139,18 @@ start_kafka(){
 	echo "Started KAFKA in container $KAFKA"
 }
 
+start_mysql(){
+	MYSQL=$(docker run \
+		-d \
+		-p 3306:3306 \
+		-v $APPS/mysql/data:/var/lib/mysql \
+		-v $APPS/mysql/logs:/var/log/mysql \
+		-e MYSQL_ROOT_PASSWORD=mysql \
+		--name mysql \
+		$DOCKER_REPO/mysql)
+	echo "Started MySQL in container $MYSQL"
+}
+
 start(){
     start_shipyard
     #start_zookeeper
@@ -151,11 +164,12 @@ start(){
 update(){
 	apt-get install -y redis-tools
 	cp /vagrant/etc/docker.conf /etc/init/docker.conf
-	docker pull xuwang/redis:latest
+	docker pull $DOCKER_REPO/redis:latest
 	docker pull shipyard/shipyard:latest
 	docker pull shipyard/agent:latest
-	#docker pull xuwang/zookeeper:latest
-	#docker pull xuwang/kafka:latest
+	#docker pull $DOCKER_REPO/zookeeper:latest
+	#docker pull $DOCKER_REPO/kafka:latest
+	#docker pull $DOCKER_REPO/mysql:latest
 }
 
 case "$1" in
