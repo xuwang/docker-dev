@@ -51,7 +51,7 @@ start_registry(){
 start_registry-ui(){
     REGISTRYUI=$(docker run \
     -d \
-    -p 8005:8080 \
+    -p 8080:8080 \
     --name registry-ui \
     --link registry:registry \
     -e REG1=http://registry:5000/v1/ \

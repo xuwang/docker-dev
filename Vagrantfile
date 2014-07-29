@@ -18,6 +18,8 @@ Vagrant::VERSION >= "1.6.3" and Vagrant::Config.run do |config|
   config.vm.box = BOX_NAME
   config.vm.box_url = BOX_URI
 
+  #Registry-UI
+  config.vm.forward_port 8080, 8080
   #Shipyard
   config.vm.forward_port 8005, 8005
   #Shipyard agent
