@@ -18,16 +18,60 @@ Vagrant::VERSION >= "1.6.3" and Vagrant::Config.run do |config|
   config.vm.box = BOX_NAME
   config.vm.box_url = BOX_URI
 
+  #Registry
+  config.vm.forward_port 5000, 5000
+  
   #Registry-UI
-  config.vm.forward_port 8080, 8080
+  config.vm.forward_port 5080, 5080
+  
   #Shipyard
   config.vm.forward_port 8005, 8005
+  
   #Shipyard agent
   config.vm.forward_port 4500, 4500
+  
   #redis
   config.vm.forward_port 6379, 6379
+  
+  #elasticsearch
+  config.vm.forward_port 9200, 9200
+  config.vm.forward_port 9300, 9300
+
+  #cassandra
+  config.vm.forward_port 7000, 7000
+  config.vm.forward_port 7001, 7001
+  config.vm.forward_port 7199, 7199
+  config.vm.forward_port 9160, 9160
+  config.vm.forward_port 9042, 9042
+
+  #mongo
+  config.vm.forward_port 27017, 27017
+  config.vm.forward_port 28017, 28017
+
+  #kafka
+  config.vm.forward_port 9092, 9092
+  config.vm.forward_port 7203, 7203
+
+  #zookeeper
+  config.vm.forward_port 2181, 2181
+
+  #jetty
+  config.vm.forward_port 8080, 8080
+
+  #Storm UI
+  config.vm.forward_port 8081, 8081
+  
   #mysql
   config.vm.forward_port 3306, 3306
+  
+  #sandbox
+  
+  #Registry-UI
+  config.vm.forward_port 8100, 8100
+  config.vm.forward_port 8101, 8101
+  config.vm.forward_port 8102, 8102
+  config.vm.forward_port 8103, 8103
+  config.vm.forward_port 8104, 8104
   
   # Installing Docker (latest) onto machine
   config.vm.provision :docker do |d|

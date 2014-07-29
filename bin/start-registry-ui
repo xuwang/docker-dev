@@ -11,7 +11,7 @@ if ! is_running registry; then start-registry; fi
     
 REGISTRYUI=$(docker run \
     -d \
-    -p 8080:8080 \
+    -p 5080:8080 \
     --name registry-ui \
     --link registry:registry \
     -e REG1=http://registry:5000/v1/ \

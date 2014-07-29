@@ -30,7 +30,7 @@ vagrent up			# bring up the VM and provisioning docker containers
 
 [docker-registry-ui](https://github.com/atc-/docker-registry-web) should be up by now.
 
-* Go to [http://localhost:8005](http://localhost:8005).
+* Go to [http://localhost:5080](http://localhost:5080).
 
 ### Update, Stop, Tear Down, Etc.
 
@@ -44,9 +44,8 @@ vagrant box remove docker	# remove the VBox from the system
 
 ### What's Next?
 
-If you add new containers, make sure you add the run cmd and pull cmd to 
-start()/update() functions in bin/dk script. 
-This will enable the auto provisioning.
+If you add new containers, make sure you add the bin/start-app script and pull cmd to 
+in bin/dk script for enabling auto provisioning.
 
 It's all yours now ...
 
