@@ -1,0 +1,8 @@
+common:
+    standalone: true
+    loglevel: info
+    search_backend: sqlalchemy
+    sqlalchemy_index_database:
+        sqlite:////data/docker-registry.db
+    storage: local
+    storage_path: /data/docker

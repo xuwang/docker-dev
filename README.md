@@ -23,7 +23,7 @@ vagrent up			# bring up the VM and provisioning docker containers
 
 #### Check docker status.
 ```
-./bin/vdock status
+./bin/vdk status
 ```
 
 ### Configure The Docker Web UI: Shipyard
@@ -45,7 +45,7 @@ vagrant box remove docker	# remove the VBox from the system
 ### What's Next?
 
 If you add new containers, make sure you add the run cmd and pull cmd to 
-start()/update() functions in bin/dock script. 
+start()/update() functions in bin/dk script. 
 This will enable the auto provisioning.
 
 It's all yours now ...
