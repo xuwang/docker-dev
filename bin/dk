@@ -48,6 +48,19 @@ start_registry(){
     echo "Started REGISTRY in container $REGISTRY" 
 }
 
+start_registry-ui(){
+    REGISTRYUI=$(docker run \
+    -d \
+    -p 8005:8080 \
+    --name registry-ui \
+    --link registry:registry \
+    -e REG1=http://registry:5000/v1/ \
+    atcol/docker-registry-ui
+    )
+    echo "Started REGISTRY UI in container $REGISTRYUI"
+    
+}
+
 start_test(){
     UBUNTU=$(docker run \
     -i -t \
@@ -62,8 +75,6 @@ start_test(){
 }
 
 start_redis(){
-    mkdir -p $APPS/redis/data
-    mkdir -p $APPS/redis/logs
     REDIS=$(docker run \
 	    -p 6379:6379 \
 	    -v $APPS/redis/data:/data \
@@ -114,8 +125,6 @@ start_shipyard(){
 }
 
 start_zookeeper(){
-    mkdir -p $APPS/zookeeper/data
-	mkdir -p $APPS/zookeeper/logs
 	ZOOKEEPER=$(docker run \
 		-d \
 		-p 2181:2181 \
@@ -126,8 +135,6 @@ start_zookeeper(){
 }
 
 start_kafka(){
-    mkdir -p $APPS/kafka/data
-	mkdir -p $APPS/kafka/logs
 	KAFKA=$(docker run \
 		-d \
 		-p 9092:9092 \
@@ -153,6 +160,7 @@ start_mysql(){
 
 start(){
     start_registry
+    start_registry_ui
     #start_shipyard
     #start_zookeeper
     #start_kafka
@@ -166,9 +174,6 @@ start(){
 update(){
 	apt-get install -y redis-tools mysql-client-core-5.5
 	cp /vagrant/etc/docker.conf /etc/init/docker.conf
-	docker pull registry
-	#docker pull shipyard/shipyard:latest
-	#docker pull shipyard/agent:latest
 	#docker pull $DOCKER_REPO/redis:latest
 	#docker pull $DOCKER_REPO/zookeeper:latest
 	#docker pull $DOCKER_REPO/kafka:latest

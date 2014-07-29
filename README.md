@@ -26,11 +26,11 @@ vagrent up			# bring up the VM and provisioning docker containers
 ./bin/vdk status
 ```
 
-### Configure The Docker Web UI: Shipyard
+### Configure The Docker Web UI: docker-registry-ui
 
-[Shipyard](http://localhost:8005/) should be up by now. The credentials are "admin/shipyard".
+[docker-registry-ui](https://github.com/atc-/docker-registry-web) should be up by now.
 
-* Go to http://localhost:8005/hosts/ to enable docker hosts.
+* Go to [http://localhost:8005](http://localhost:8005).
 
 ### Update, Stop, Tear Down, Etc.
 
