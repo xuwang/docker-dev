@@ -35,3 +35,4 @@ SHIPYARD_AGENT=$(docker run \
 	--link shipyard:shipyard \
 	shipyard/agent)
 echo "Started shipyard-agent in container $SHIPYARD_AGENT"
+echo "Shipyard UI at http://localhost:8005"
