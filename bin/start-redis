@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e #-x
+
+APPS=${APPS:-/mnt/apps}
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
+
+apt-get install -qq -y redis-tools
+
+REDIS=$(docker run \
+    -p 6379:6379 \
+    -v $APPS/redis/data:/data \
+    -v $APPS/redis/logs:/logs \
+    --name redis \
+    -d \
+    $DOCKER_REPO/redis)
+    # Wait until redis is ready
+    sleep 1;
+	until redis-cli ping | grep "PONG" &> /dev/null 
+	do 
+        echo Waiting for Redis
+	    sleep 1; 
+	done
+echo "Started REDIS in container $REDIS"

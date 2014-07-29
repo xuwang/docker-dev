@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e #-x
+
+APPS=${APPS:-/mnt/apps}
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
+
+ZOOKEEPER=$(docker run \
+	-d \
+	-p 2181:2181 \
+	-v $APPS/zookeeper/data:/data \
+	-v $APPS/zookeeper/logs:/logs \
+	--name zookeeper \
+	$DOCKER_REPO/zookeeper)
+echo "Started ZOOKEEPER in container $ZOOKEEPER"

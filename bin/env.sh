@@ -1,5 +1,6 @@
 #!/bin/bash
 
-# set up common env 
-export DOCKER_REPO='xuwang'
-export DEBIAN_FRONTEND=noninteractive
+DOCKER_REPO='xuwang'
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+export PATH=$DIR:$PATH

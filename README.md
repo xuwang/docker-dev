@@ -44,9 +44,7 @@ vagrant box remove docker	# remove the VBox from the system
 
 ### What's Next?
 
-If you add new containers, make sure you add the run cmd and pull cmd to 
-start()/update() functions in bin/dk script. 
-This will enable the auto provisioning.
+If you add new containers, make sure you add the start-app scripts and pull cmd in bin/dk script for auto provisioning
 
 It's all yours now ...
 
