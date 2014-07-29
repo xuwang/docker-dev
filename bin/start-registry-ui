@@ -17,4 +17,4 @@ REGISTRYUI=$(docker run \
     -e REG1=http://registry:5000/v1/ \
     atcol/docker-registry-ui
 )
-echo "Started REGISTRY UI in container $REGISTRYUI"
+echo "REGISTRY UI at http://localhost:5080"
