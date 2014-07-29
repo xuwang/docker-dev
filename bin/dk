@@ -152,9 +152,11 @@ start_mysql(){
 }
 
 start(){
-    start_shipyard
+    start_registry
+    #start_shipyard
     #start_zookeeper
     #start_kafka
+    #start_mysql
     
 	echo ============================================
 	echo All container started!
@@ -162,11 +164,12 @@ start(){
 }
 
 update(){
-	apt-get install -y redis-tools
+	apt-get install -y redis-tools mysql-client-core-5.5
 	cp /vagrant/etc/docker.conf /etc/init/docker.conf
-	docker pull $DOCKER_REPO/redis:latest
-	docker pull shipyard/shipyard:latest
-	docker pull shipyard/agent:latest
+	docker pull registry
+	#docker pull shipyard/shipyard:latest
+	#docker pull shipyard/agent:latest
+	#docker pull $DOCKER_REPO/redis:latest
 	#docker pull $DOCKER_REPO/zookeeper:latest
 	#docker pull $DOCKER_REPO/kafka:latest
 	#docker pull $DOCKER_REPO/mysql:latest
