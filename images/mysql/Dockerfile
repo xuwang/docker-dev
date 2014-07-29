@@ -1,14 +1,28 @@
 FROM ubuntu
-MAINTAINER Ben Firshman <ben@orchardup.com>
+MAINTAINER Fernando Mayo <fernando@tutum.co>, Feng Honglin <hfeng@tutum.co>
 
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update -qq && apt-get install -y mysql-server-5.5
+# Install packages
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server-5.6 pwgen
 
+# Remove pre-installed database
+RUN rm -rf /var/lib/mysql/*
+
+# Add MySQL configuration
 ADD my.cnf /etc/mysql/conf.d/my.cnf
-RUN chmod 664 /etc/mysql/conf.d/my.cnf
-ADD run /usr/local/bin/run
-RUN chmod +x /usr/local/bin/run
+ADD mysqld_charset.cnf /etc/mysql/conf.d/mysqld_charset.cnf
 
-VOLUME ["/var/lib/mysql", "/var/log/mysql"]
+# Add MySQL scripts
+ADD create_mysql_admin_user.sh /create_mysql_admin_user.sh
+ADD import_sql.sh /import_sql.sh
+ADD run.sh /run.sh
+RUN chmod 755 /*.sh
+
+# Exposed ENV
+ENV MYSQL_PASS **Random**
+
+# Add VOLUMEs to allow backup of config and databases
+VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/log"]
+
 EXPOSE 3306
-CMD ["/usr/local/bin/run"]
+CMD ["/run.sh"]

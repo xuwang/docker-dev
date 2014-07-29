@@ -18,10 +18,10 @@ case "$1" in
 		;;
 	update)
 		git pull
-		vagrant ssh -c "sudo /vagrant/bin/dock update"
+		vagrant ssh -c "sudo /vagrant/bin/dk update"
 		;;
 	*)
-		vagrant ssh -c "sudo /vagrant/bin/dock $1"
+		vagrant ssh -c "sudo /vagrant/bin/dk $1"
 		;;
 esac
 

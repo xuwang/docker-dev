@@ -26,6 +26,8 @@ Vagrant::VERSION >= "1.6.3" and Vagrant::Config.run do |config|
   config.vm.forward_port 4500, 4500
   #redis
   config.vm.forward_port 6379, 6379
+  #mysql
+  config.vm.forward_port 3306, 3306
   
   # Installing Docker (latest) onto machine
   config.vm.provision :docker do |d|
@@ -35,13 +37,6 @@ end
   
 
 Vagrant::VERSION >= "1.6.3" and Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
-  config.vm.provider :vmware_fusion do |f, override|
-    override.vm.box = BOX_NAME
-    override.vm.box_url = VF_BOX_URI
-    #override.vm.synced_folder ".", "/vagrant", disabled: true
-    f.vmx["displayName"] = BOX_NAME
-  end
 
   config.vm.provider :virtualbox do |vb|
     config.vm.box = BOX_NAME

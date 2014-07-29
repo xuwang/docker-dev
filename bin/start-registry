@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e #-x
+
+APPS=${APPS:-/mnt/apps}
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
+
+REGISTRY=$(docker run \
+    -d \
+    -p 5000:5000 \
+    --name registry \
+    -v /vagrant/registry:/data \
+    -e DOCKER_REGISTRY_CONFIG=/data/config.yml \
+    registry
+)
+echo "Started REGISTRY in container $REGISTRY"

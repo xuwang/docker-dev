@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e #-x
 
-DIR="$( cd "$( dirname "$0" )" && pwd )"
 APPS=${APPS:-/mnt/apps}
 
-. $DIR/env.sh
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
 
 # get ids of all containers that matches $1
 app_ids(){
@@ -35,136 +35,22 @@ stop(){
 	fi
 }
 
-start_registry(){
-    export DOCKER_REGISTRY_CONFIG=/vagrant/registry/conifg.yml
-    REGISTRY=$(docker run \
-    -d \
-    -p 5000:5000 \
-    --name registry \
-    -v /vagrant/registry:/data \
-    -e DOCKER_REGISTRY_CONFIG=/data/config.yml \
-    registry
-    )
-    echo "Started REGISTRY in container $REGISTRY" 
-}
-
-start_registry-ui(){
-    REGISTRYUI=$(docker run \
-    -d \
-    -p 8080:8080 \
-    --name registry-ui \
-    --link registry:registry \
-    -e REG1=http://registry:5000/v1/ \
-    atcol/docker-registry-ui
-    )
-    echo "Started REGISTRY UI in container $REGISTRYUI"
-    
-}
-
-start_test(){
-    UBUNTU=$(docker run \
-    -i -t \
-    -v /vagrant/test:/vagrant \
-    --name test \
-	--link redis:redis \
-	--link zookeeper:zookeeper \
-	--link kafka:kafka \
-	--link mysql:mysql \
-    ubuntu bash -l
-    )
-}
-
-start_redis(){
-    REDIS=$(docker run \
-	    -p 6379:6379 \
-	    -v $APPS/redis/data:/data \
-	    -v $APPS/redis/logs:/logs \
-	    --name redis \
-	    -d \
-	    $DOCKER_REPO/redis)
-        # Wait until redis is ready
-        sleep 1;
-    	until redis-cli ping | grep "PONG" &> /dev/null 
-    	do 
-            echo Waiting for Redis
-    	    sleep 1; 
-    	done
-    echo "Started REDIS in container $REDIS"  
-}
-
-start_shipyard(){
-    
-    start_redis
-
-	SHIPYARD=$(docker run \
-		-p 8005:8000 \
-		-d \
-		--name shipyard \
-		--link redis:redis \
-		shipyard/shipyard)
-	echo "Started shipyard in container $SHIPYARD"
-	
-	# Wait until shipyard is ready
-	sy_url=http://`docker inspect --format="{{ .NetworkSettings.IPAddress }}" shipyard`:8000
-	until curl -o /dev/null --silent --head --write-out '%{http_code}\n' $sy_url | grep "302" &> /dev/null 
-	do 
-        echo Waiting for Shipyard
-	    sleep 2; 
-	done
-	
-	SHIPYARD_AGENT=$(docker run \
-	    -d \
-		-v /var/run/docker.sock:/docker.sock \
-		-e IP=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{print $1;}'` \
-		-e URL='http://shipyard:8000' \
-		-p 4500:4500 \
-		--name shipyard-agent \
-		--link shipyard:shipyard \
-		shipyard/agent)
-	echo "Started shipyard-agent in container $SHIPYARD_AGENT"
-}
-
-start_zookeeper(){
-	ZOOKEEPER=$(docker run \
-		-d \
-		-p 2181:2181 \
-		-v $APPS/zookeeper/logs:/logs \
-		--name zookeeper \
-		$DOCKER_REPO/zookeeper)
-	echo "Started ZOOKEEPER in container $ZOOKEEPER"
-}
-
-start_kafka(){
-	KAFKA=$(docker run \
-		-d \
-		-p 9092:9092 \
-		-v $APPS/kafka/data:/data \
-		-v $APPS/kafka/logs:/logs \
-		--name kafka \
-		--link zookeeper:zookeeper \
-		$DOCKER_REPO/kafka)
-	echo "Started KAFKA in container $KAFKA"
-}
-
-start_mysql(){
-	MYSQL=$(docker run \
-		-d \
-		-p 3306:3306 \
-		-v $APPS/mysql/data:/var/lib/mysql \
-		-v $APPS/mysql/logs:/var/log/mysql \
-		-e MYSQL_ROOT_PASSWORD=mysql \
-		--name mysql \
-		$DOCKER_REPO/mysql)
-	echo "Started MySQL in container $MYSQL"
-}
-
 start(){
-    start_registry
-    start_registry_ui
-    #start_shipyard
-    #start_zookeeper
-    #start_kafka
-    #start_mysql
+    # start specific app defined in $2 or start all apps
+    if [ -z $1 ]
+    then
+        for apps in \
+            registry-ui \
+            #shipyard \
+            #zookeeper \
+            #kafka \
+            #mysql 
+        do
+            if ! is_running $apps; then $"start-$apps"; fi
+        done
+    else
+        if ! is_running $1; then $"start-$1"; fi
+	fi
     
 	echo ============================================
 	echo All container started!
@@ -172,12 +58,24 @@ start(){
 }
 
 update(){
-	apt-get install -y redis-tools mysql-client-core-5.5
 	cp /vagrant/etc/docker.conf /etc/init/docker.conf
-	#docker pull $DOCKER_REPO/redis:latest
-	#docker pull $DOCKER_REPO/zookeeper:latest
-	#docker pull $DOCKER_REPO/kafka:latest
-	#docker pull $DOCKER_REPO/mysql:latest
+    # pull specific image defined in $2 or pull all
+    if [ -z $1 ]
+    then
+        for im in \
+            #redis \
+            #zookeeper \
+            #kafka \
+            #mysql \
+            #sendbox
+        do
+            echo pull $DOCKER_REPO/${im}:latest
+            docker pull $DOCKER_REPO/${im}:latest 
+        done
+    else
+        echo pull $DOCKER_REPO/$1:latest
+        docker pull $DOCKER_REPO/$1:latest 
+	fi
 }
 
 case "$1" in
@@ -186,14 +84,7 @@ case "$1" in
 		start $2
 		;;
 	start)
-	    # start specific app defined in $2 or start all apps
-	    fn="start_$2"
-	    if type -t $fn | grep -q '^function$' 2>/dev/null
-	    then
-	        $fn
-	    else
-		    start
-		fi
+	    start $2
 		;;
 	stop)
 		stop $2
@@ -202,7 +93,7 @@ case "$1" in
 		killz $2
 		;;
 	update)
-		update
+		update $2
 		;;
 	status)
 		docker info
