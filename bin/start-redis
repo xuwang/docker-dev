@@ -14,7 +14,8 @@ REDIS=$(docker run \
     -v $APPS/redis/logs:/logs \
     --name redis \
     -d \
-    $DOCKER_REPO/redis)
+    $DOCKER_REPO/redis
+    )
     # Wait until redis is ready
     sleep 1;
 	until redis-cli ping | grep "PONG" &> /dev/null 

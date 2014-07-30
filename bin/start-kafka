@@ -15,5 +15,6 @@ KAFKA=$(docker run \
 	-v $APPS/kafka/logs:/logs \
 	--name kafka \
 	--link zookeeper:zookeeper \
-	$DOCKER_REPO/kafka)
+	$DOCKER_REPO/kafka
+    )
 echo "Started KAFKA in container $KAFKA"

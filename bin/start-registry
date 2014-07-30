@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e #-x
+set -e -x
 
 APPS=${APPS:-/mnt/apps}
 
@@ -13,5 +13,5 @@ REGISTRY=$(docker run \
     -v /vagrant/registry:/data \
     -e DOCKER_REGISTRY_CONFIG=/data/config.yml \
     registry
-)
+    )
 echo "Started REGISTRY in container $REGISTRY"

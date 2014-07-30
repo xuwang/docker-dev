@@ -1,11 +1,10 @@
 #!/bin/bash
 set -e #-x
 
-APPS=${APPS:-/mnt/apps}
-
 SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
 . $SCRIPT_HOME/env.sh
 
+REPO="shipyard"
 
 if ! is_running redis; then start-redis; fi
 
@@ -14,7 +13,8 @@ SHIPYARD=$(docker run \
 	-d \
 	--name shipyard \
 	--link redis:redis \
-	shipyard/shipyard)
+	$REPO/shipyard
+	)
 echo "Started shipyard in container $SHIPYARD"
 
 # Wait until shipyard is ready
@@ -33,6 +33,7 @@ SHIPYARD_AGENT=$(docker run \
 	-p 4500:4500 \
 	--name shipyard-agent \
 	--link shipyard:shipyard \
-	shipyard/agent)
+	$REPO/shipyardagent
+	)
 echo "Started shipyard-agent in container $SHIPYARD_AGENT"
 echo "Shipyard UI at http://localhost:8005"

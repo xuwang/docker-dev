@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e #-x
+#set -x
 
 APPS=${APPS:-/mnt/apps}
 
@@ -15,6 +15,6 @@ REGISTRYUI=$(docker run \
     --name registry-ui \
     --link registry:registry \
     -e REG1=http://registry:5000/v1/ \
-    atcol/docker-registry-ui
-)
+    `pull_image_latest  atcol/docker-registry-ui`
+    )
 echo "REGISTRY UI at http://localhost:5080"

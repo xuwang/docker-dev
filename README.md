@@ -26,7 +26,7 @@ vagrent up			# bring up the VM and provisioning docker containers
 ./bin/vdk status
 ```
 
-### Configure The Docker Web UI: docker-registry-ui
+### Docker Local Registry Web UI: docker-registry-ui
 
 [docker-registry-ui](https://github.com/atc-/docker-registry-web) should be up by now.
 

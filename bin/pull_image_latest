@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# Pull image
+# Try to pull latest images from local regisgtry if it is available
+
+#set -x
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+
+. $SCRIPT_HOME/env.sh
+
+if is_running registry
+then
+    im=`echo $1 | sed 's|.*/|localhost:5000/|'`
+    if docker pull $im:latest &> /dev/null; then echo $im ; exit 0; fi
+fi
+
+docker pull $1:latest &> /dev/null && echo $im
