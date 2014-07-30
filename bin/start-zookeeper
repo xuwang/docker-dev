@@ -13,4 +13,5 @@ ZOOKEEPER=$(docker run \
 	-v $APPS/zookeeper/logs:/logs \
 	--name zookeeper \
 	$DOCKER_REPO/zookeeper)
+sleep 2
 echo "Started ZOOKEEPER in container $ZOOKEEPER"

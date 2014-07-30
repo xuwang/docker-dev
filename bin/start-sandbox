@@ -6,14 +6,13 @@ APPS=${APPS:-/mnt/apps}
 SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
 . $SCRIPT_HOME/env.sh
 
-BOX=$(docker run \
-    -i -t \
+docker run \
+    -it -d \
     -v /vagrant/test:/vagrant \
     --name sandbox \
-    --link redis:redis \
-    --link zookeeper:zookeeper \
     --link kafka:kafka \
-    --link mysql:mysql \
-    ubuntu bash -l
-)
-echo "Started SandBox in container $BOX"
+    $DOCKER_REPO/sandbox
+    #--link redis:redis \
+    #--link zookeeper:zookeeper \
+    #--link kafka:kafka \
+    #--link mysql:mysql \
