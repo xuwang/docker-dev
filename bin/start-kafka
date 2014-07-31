@@ -8,7 +8,7 @@ SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
 
 if ! is_running zookeeper; then start-zookeeper; fi
 
-# workaround a bug in kafka 0.8.1.1   
+# workaround a bug in kafka 0.8.1.1 KAFKA-1451 
 while echo dump | nc `getip zookeeper` 2181 | grep '/controller'
 do
         echo waiting zookeeper to expire old leader
