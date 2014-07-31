@@ -40,8 +40,8 @@ start(){
     if [ -z $1 ]
     then
         for apps in \
-            #registry-ui \
             shipyard \
+            #registry-ui \
             #zookeeper \
             #kafka \
             #mysql 
