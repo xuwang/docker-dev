@@ -30,7 +30,7 @@ Vagrant::VERSION >= "1.6.3" and Vagrant::Config.run do |config|
   config.vm.forward_port 6379, 6379
 
   #logstash ui
-  config.vm.forward_port 9292 9292
+  config.vm.forward_port 9292, 9292
   
   #elasticsearch
   config.vm.forward_port 9200, 9200
