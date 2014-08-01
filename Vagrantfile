@@ -6,9 +6,6 @@ BOX_NAME = ENV['BOX_NAME'] || "docker"
 BOX_URI = ENV['BOX_URI'] || 
           '../ubuntu-14.04-amd64-vbox.box' ||
           "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box"
-VF_BOX_URI = ENV['BOX_URI'] || 
-            "../ubuntu-14.04-amd64-vmwarefusion.box" ||
-            "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vmwarefusion.box"
             
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
@@ -32,6 +29,47 @@ Vagrant::VERSION >= "1.6.3" and Vagrant::Config.run do |config|
   
   #redis
   config.vm.forward_port 6379, 6379
+
+  #logstash ui
+  config.vm.forward_port 9292 9292
+  
+  #elasticsearch
+  config.vm.forward_port 9200, 9200
+  config.vm.forward_port 9300, 9300
+
+  #cassandra
+  config.vm.forward_port 7000, 7000
+  config.vm.forward_port 7001, 7001
+  config.vm.forward_port 7199, 7199
+  config.vm.forward_port 9160, 9160
+  config.vm.forward_port 9042, 9042
+
+  #mongo
+  config.vm.forward_port 27017, 27017
+  config.vm.forward_port 28017, 28017
+
+  #kafka
+  config.vm.forward_port 9092, 9092
+  config.vm.forward_port 7203, 7203
+
+  #zookeeper
+  config.vm.forward_port 2181, 2181
+
+  #jetty
+  config.vm.forward_port 8080, 8080
+
+  #Storm UI
+  config.vm.forward_port 8081, 8081
+  
+  #mysql
+  config.vm.forward_port 3306, 3306
+  
+  #sandbox
+  config.vm.forward_port 8100, 8100
+  config.vm.forward_port 8101, 8101
+  config.vm.forward_port 8102, 8102
+  config.vm.forward_port 8103, 8103
+  config.vm.forward_port 8104, 8104
   
   #elasticsearch
   config.vm.forward_port 9200, 9200

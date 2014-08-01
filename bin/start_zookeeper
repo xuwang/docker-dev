@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e #-x
+
+APPS=${APPS:-/mnt/apps}
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
+
+#build first
+dockbuild_if_missing zookeeper
+
+ZOOKEEPER=$(docker run \
+	-d \
+	-p 2181:2181 \
+	-v $APPS/zookeeper/data:/data \
+	-v $APPS/zookeeper/logs:/logs \
+	--name zookeeper \
+	zookeeper)
+sleep 2
+echo "Started ZOOKEEPER in container $ZOOKEEPER"

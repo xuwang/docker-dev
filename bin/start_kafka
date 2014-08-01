@@ -1,0 +1,29 @@
+#!/bin/bash
+
+APPS=${APPS:-/mnt/apps}
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
+
+#build first
+dockbuild_if_missing  kafka
+
+if ! is_running zookeeper; then start_zookeeper; fi
+
+# workaround a bug in kafka 0.8.1.1 KAFKA-1451 
+while echo dump | nc `getip zookeeper` 2181 | grep '/controller'
+do
+        echo waiting zookeeper to expire old leader
+        sleep 5
+done
+
+KAFKA=$(docker run \
+	-d \
+	-p 9092:9092 \
+	-v $APPS/kafka/data:/data \
+	-v $APPS/kafka/logs:/logs \
+	--name kafka \
+	--link zookeeper:zookeeper \
+	kafka
+    )
+echo "Started KAFKA in container $KAFKA"

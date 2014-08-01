@@ -6,8 +6,8 @@ function sdrit(){
 }
 
 alias sdr="sudo docker run"
-alias dbld='sudo docker build -t relateiq/${PWD##*/} .'
-alias dpsh='sudo docker push relateiq/${PWD##*/}'
+alias dbld='sudo docker build -t xuwang/${PWD##*/} .'
+alias dpsh='sudo docker push xuwang/${PWD##*/}'
 alias dbldpsh="dbld; dpsh"
 alias ll="ls -l"
 alias lal="ls -al"

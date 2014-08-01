@@ -1,4 +1,4 @@
-FROM xuwang/openjdk7-jre
+FROM openjdk7-jre
 
 # Zookeeper Version
 ENV VERSION 3.4.6

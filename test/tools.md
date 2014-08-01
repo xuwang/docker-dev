@@ -43,16 +43,19 @@ touch logs
 ```
 ### Start Producer
 ```
+docker run -it --rm --link kafka:kafka localhost:5000/sandbox bash -l
+cd /tmp
 touch logs
 tail -f logs | kafkacat -P -b kafka -t test -p 0 -z snappy &
 while true
 do 
- echo `date`:$((RANDOM%=255))"."$((RANDOM%=255))"."$((RANDOM%=255))"."$((RANDOM%=255)):`fortune` >> logs
+ echo `date`:$((RANDOM%=255))"."$((RANDOM%=255))"."$((RANDOM%=255))"."$((RANDOM%=255)):`/usr/games/fortune` >> logs
  sleep 3
 done
 ```
 ### Start Consumer
 ```
+docker run -it --rm --link kafka:kafka localhost:5000/sandbox bash -l
 kafkacat -C -b kafka -t test -p 0
 ```
 
