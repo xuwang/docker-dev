@@ -53,6 +53,8 @@ start(){
         do
             if ! is_running $apps; then $"start_$apps"; fi
         done
+    else
+	    if ! is_running $apps; then $"start_$1"; fi
     fi
     
 	echo ============================================
@@ -65,6 +67,14 @@ update(){
 }
 
 case "$1" in
+	list)
+	    dockers=$(ls -1  $SCRIPT_HOME/start_* | sed 's/start_//')
+	    echo "Runnable dockers are:"
+	    for i in $dockers
+	    do
+	        basename "$i"
+	    done
+	    ;;
 	restart)
 		stop $2
 		start $2
@@ -86,6 +96,6 @@ case "$1" in
 		docker ps -a
 		;;
 	*)
-		echo $"Usage: $0 {start|stop|kill|update|restart|status}"
+		echo $"Usage: $0 {list|start|stop|kill|update|restart|status}"
 		RETVAL=1
 esac
