@@ -4,6 +4,7 @@ set -e #-x
 if [ "$(whoami)" != "root" ]; then
 	printf "Sorry, you are not root.\nUse: sudo $0 $*.\n"
 	exit 1
+fi
 APPS=${APPS:-/mnt/apps}
 
 SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
@@ -41,7 +42,7 @@ stop(){
 
 start(){
     # start specific app defined in $2 or start all apps
-    if [ -z $1 ]
+    if [ -z $1 ];
     then
         for apps in \
             registry-ui \
@@ -52,6 +53,7 @@ start(){
         do
             if ! is_running $apps; then $"start_$apps"; fi
         done
+    fi
     
 	echo ============================================
 	echo All container started!
