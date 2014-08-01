@@ -1,4 +1,4 @@
-FROM xuwang/openjdk7-jre
+FROM openjdk7-jre
 
 # Kafka Version
 ENV VERSION 0.8.1.1

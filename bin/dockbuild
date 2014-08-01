@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+
+if [ -z $1 ]
+    then echo "Usage: $0 <name>"
+fi
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+IMAGE_DIR=$SCRIPT_HOME/../images/$1
+if [ -d $IMAGE_DIR ] && [ -f $IMAGE_DIR/Dockerfile ]
+then
+    cd $IMAGE_DIR
+    echo "Building $1"
+    docker build -t $1 . &&
+    exit 0
+else
+    echo "Build $IMAGE_DIR failed"
+    exit 1
+fi

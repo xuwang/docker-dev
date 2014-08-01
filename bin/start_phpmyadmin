@@ -1,0 +1,19 @@
+#!/bin/bash
+
+APPS=${APPS:-/mnt/apps}
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
+
+#build first
+dockbuild_if_missing phpmyadmin
+
+MYADMIN=$(docker run \
+	-d \
+	-p 8100:80 \
+	-v /vagrant/conf/phpmyadmin:/config:ro \
+	--name phpmyadmin \
+	--link mysql:mysql \
+	phpmyadmin
+	)
+echo "Started phpmyadmin in container $MYADMIN"

@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:14.04
 
 # Redis Version
 ENV VERSION stable

@@ -3,8 +3,7 @@
 ### Installation:
 
 #### Rerequisites: Install VirtualBox and Vagrant 
-* Install VirtualBox: [Virtual download page](https://www.virtualbox.org/wiki/Downloads).
-* Install Vagrant: [Vagrant download page](http://www.vagrantup.com/downloads.html).
+* Install VirtualBox: [VirtualBox download page](https://www.virtualbox.org/wiki/Downloads).
 * Install Vagrant Guest Additions Plugin
 ```
 vagrant plugin install vbguest
@@ -25,12 +24,17 @@ vagrent up			# bring up the VM and provisioning docker containers
 ```
 ./bin/vdk status
 ```
-
 ### Configure The Docker Web UI: Shipyard
 
 [Shipyard](http://localhost:8005/) should be up by now. The credentials are "admin/shipyard".
 
 * Go to http://localhost:8005/hosts/ to enable docker hosts.
+
+### Docker Local Registry Web UI: docker-registry-ui
+
+[docker-registry-ui](https://github.com/atc-/docker-registry-web) should also be up by now.
+
+* Go to [http://localhost:5080](http://localhost:5080).
 
 ### Update, Stop, Tear Down, Etc.
 
@@ -44,7 +48,8 @@ vagrant box remove docker	# remove the VBox from the system
 
 ### What's Next?
 
-If you add new containers, make sure you add the start-app scripts and pull cmd in bin/dk script for auto provisioning
+If you add new containers, make sure you add the bin/start-app script and pull cmd to 
+in bin/dk script for enabling auto provisioning.
 
 It's all yours now ...
 

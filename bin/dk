@@ -1,10 +1,14 @@
 #!/bin/bash
 set -e #-x
 
+if [ "$(whoami)" != "root" ]; then
+	printf "Sorry, you are not root.\nUse: sudo $0 $*.\n"
+	exit 1
 APPS=${APPS:-/mnt/apps}
 
 SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
 . $SCRIPT_HOME/env.sh
+
 
 # get ids of all containers that matches $1
 app_ids(){
@@ -40,17 +44,14 @@ start(){
     if [ -z $1 ]
     then
         for apps in \
+            registry-ui \
             shipyard \
-            #registry-ui \
             #zookeeper \
             #kafka \
             #mysql 
         do
-            if ! is_running $apps; then $"start-$apps"; fi
+            if ! is_running $apps; then $"start_$apps"; fi
         done
-    else
-        if ! is_running $1; then $"start-$1"; fi
-	fi
     
 	echo ============================================
 	echo All container started!
@@ -59,23 +60,6 @@ start(){
 
 update(){
 	cp /vagrant/etc/docker.conf /etc/init/docker.conf
-    # pull specific image defined in $2 or pull all
-    if [ -z $1 ]
-    then
-        for im in \
-            #redis \
-            #zookeeper \
-            #kafka \
-            #mysql \
-            #sendbox
-        do
-            echo pull $DOCKER_REPO/${im}:latest
-            docker pull $DOCKER_REPO/${im}:latest 
-        done
-    else
-        echo pull $DOCKER_REPO/$1:latest
-        docker pull $DOCKER_REPO/$1:latest 
-	fi
 }
 
 case "$1" in
