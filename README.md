@@ -3,7 +3,7 @@
 ### Installation:
 
 #### Rerequisites: Install VirtualBox and Vagrant 
-* Install VirtualBox: [Virtual download page](https://www.virtualbox.org/wiki/Downloads).
+* Install VirtualBox: [VirtualBox download page](https://www.virtualbox.org/wiki/Downloads).
 * Install Vagrant: [Vagrant download page](http://www.vagrantup.com/downloads.html).
 * Install Vagrant Guest Additions Plugin
 ```

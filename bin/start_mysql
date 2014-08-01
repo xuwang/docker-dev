@@ -1,11 +1,12 @@
 #!/bin/bash
-set -e #-x
 
 APPS=${APPS:-/mnt/apps}
 
 SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
 . $SCRIPT_HOME/env.sh
 
+#build first
+dockbuild_if_missing  mysql
 
 MYSQL=$(docker run \
 	-d \
@@ -13,5 +14,5 @@ MYSQL=$(docker run \
 	-v $APPS/mysql/data:/var/lib/mysql \
 	-e MYSQL_PASS=mysql \
 	--name mysql \
-	tutum/mysql:5.6)
+	mysql)
 echo "Started MySQL in container $MYSQL"

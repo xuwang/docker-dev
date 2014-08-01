@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env
+
+if [ -z $1 ]
+    then echo "Usage: $0 <name>"
+fi
+
+if ! has_local $1
+then
+    dockbuild $1
+fi

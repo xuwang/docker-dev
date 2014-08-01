@@ -6,9 +6,6 @@ BOX_NAME = ENV['BOX_NAME'] || "docker"
 BOX_URI = ENV['BOX_URI'] || 
           '../ubuntu-14.04-amd64-vbox.box' ||
           "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box"
-VF_BOX_URI = ENV['BOX_URI'] || 
-            "../ubuntu-14.04-amd64-vmwarefusion.box" ||
-            "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vmwarefusion.box"
             
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
@@ -32,6 +29,9 @@ Vagrant::VERSION >= "1.6.3" and Vagrant::Config.run do |config|
   
   #redis
   config.vm.forward_port 6379, 6379
+
+  #logstash ui
+  config.vm.forward_port 9292 9292
   
   #elasticsearch
   config.vm.forward_port 9200, 9200
@@ -65,8 +65,6 @@ Vagrant::VERSION >= "1.6.3" and Vagrant::Config.run do |config|
   config.vm.forward_port 3306, 3306
   
   #sandbox
-  
-  #Registry-UI
   config.vm.forward_port 8100, 8100
   config.vm.forward_port 8101, 8101
   config.vm.forward_port 8102, 8102

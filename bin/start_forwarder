@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+
+APPS=${APPS:-/mnt/apps}
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
+
+#build first
+dockbuild_if_missing logstash-forwarder
+
+FORWARDER=$(docker run \
+    -d \
+    -v /tmp/feeds \
+    -e LOGSTASH_SERVER="logstash:5043" \
+    --link logstash:logstash \
+    --name forwarder \
+    logstash-forwarder
+    )
+echo "Started logstash-forward in container $FORWARDER"
+echo "Logs write to /tmp/feeds/fifofeed will be forwarded to logstash server"

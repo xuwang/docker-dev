@@ -1,5 +1,4 @@
 #!/bin/bash
-#set -x
 
 APPS=${APPS:-/mnt/apps}
 
@@ -7,7 +6,7 @@ SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
 . $SCRIPT_HOME/env.sh
 
 
-if ! is_running registry; then start-registry; fi
+if ! is_running registry; then start_registry; fi
     
 REGISTRYUI=$(docker run \
     -d \
@@ -15,6 +14,6 @@ REGISTRYUI=$(docker run \
     --name registry-ui \
     --link registry:registry \
     -e REG1=http://registry:5000/v1/ \
-    `pull_image_latest  atcol/docker-registry-ui`
+    atcol/docker-registry-ui
     )
 echo "REGISTRY UI at http://localhost:5080"

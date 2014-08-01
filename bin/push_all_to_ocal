@@ -1,0 +1,5 @@
+#!/bin/bash
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+
+$SCRIPT_HOME/push_all_to localhost:5000

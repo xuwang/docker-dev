@@ -6,13 +6,12 @@ APPS=${APPS:-/mnt/apps}
 SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
 . $SCRIPT_HOME/env.sh
 
+#build first
+dockbuild_if_missing  sandbox
+
 docker run \
     -it -d \
     -v /vagrant/test:/vagrant \
     --name sandbox \
-    --link kafka:kafka \
-    $DOCKER_REPO/sandbox
-    #--link redis:redis \
-    #--link zookeeper:zookeeper \
-    #--link kafka:kafka \
-    #--link mysql:mysql \
+    sandbox
+    --link kafka:kafka #--link zookeeper:zookeeper --link kafka:kafka --link mysql:mysql\
