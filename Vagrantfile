@@ -3,8 +3,7 @@
 
 # Make sure use a "docker ready" base image
 BOX_NAME = ENV['BOX_NAME'] || "docker"
-BOX_URI = ENV['BOX_URI'] || 
-          '../ubuntu-14.04-amd64-vbox.box' ||
+BOX_URI = ENV['BOX_URI'] ||
           "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box"
             
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
