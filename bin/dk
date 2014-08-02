@@ -63,7 +63,6 @@ start(){
 }
 
 init(){
-	cp /vagrant/etc/docker.conf /etc/init/docker.conf
 	load_all
 }
 

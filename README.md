@@ -49,11 +49,11 @@ Now the Docker Host VM is ready and you can ssh to it and check the docker statu
 
 ### Start The Docker Web UI: Shipyard:
 
-You can start up [Shipyard](https://github.com/shipyard/shipyard):
+You can start up Shipyard (https://github.com/shipyard/shipyard):
 
 		sudo dk start shipyard
 
-Go to http://localhost:8005/hosts/ to enable docker hosts (the credentials are "admin/shipyard".).
+Go to shipyard hosts page (http://localhost:8005/hosts/) to enable docker hosts (the credentials are "admin/shipyard").
 
 ### Docker Local Registry Web UI: docker-registry-ui
 
@@ -61,9 +61,9 @@ If you want to run you own local docker registry, simply:
 
 		sudo dk start registry-ui
 		
-[docker-registry-ui](https://github.com/atc-/docker-registry-web) should also be up by now.
+docker-registry-ui (https://github.com/atc-/docker-registry-web) should also be up by now.
 
-Go to [http://localhost:5080](http://localhost:5080)
+Go to docker-registry-ui (http://localhost:5080)
 
 ### Manage applications
 
@@ -72,7 +72,6 @@ You manage dockers using bin/vdk without having to login to VM. vdk runs ssh and
 The following examples show how to use dk command within vagrant
 
 ### Login to docker server
-
         vagrant ssh
 
 */vagrant/bin/dk* is available to let you easily manage all the services.
