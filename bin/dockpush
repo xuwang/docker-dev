@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ -z $1 ]
+    then echo "Usage: $0 <name> [<registry>]"
+fi
+
+registry="${2:-localhost:5000}"
+im="$registry/${1}:latest"
+docker tag $1 $im
+docker push $im

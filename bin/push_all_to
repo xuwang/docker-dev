@@ -8,8 +8,8 @@ fi
 
 for dir in $SCRIPT_HOME/../images/*/
 do
-	cd $dir &&
-	image_name=$1/${PWD##*/} && # i.e. <registry>/$(basename $PWD)
-	echo "Pushing $image_name" &&
-	docker push $image_name
+    cd $dir
+	image_name=${PWD##*/}           # i.e. $(basename $PWD)
+	# echo "Pushing $image_name"
+	$SCRIPT_HOME/dockpush $image_name $1
 done
