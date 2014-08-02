@@ -1,16 +1,11 @@
 #!/bin/bash
 
 SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
 
-# the java base for zookeeper and kafka
-cd $SCRIPT_HOME/../images/openjdk7-jre/
-echo "Building openjdk7-jre from $dir" &&
-docker build -t openjdk7-jre .
+dockbuild openjdk7-jre
 
 for dir in $SCRIPT_HOME/../images/*/
 do
-	cd $dir &&
-	image_name=${PWD##*/} && # i.e. $(basename $PWD)
-	echo "Building $image_name from $dir" &&
-	docker build -t $image_name .
+    dockbuild $dir
 done

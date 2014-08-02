@@ -54,7 +54,7 @@ start(){
             if ! is_running $apps; then $"start_$apps"; fi
         done
     else
-	    if ! is_running $apps; then $"start_$1"; fi
+	    if ! is_running $1; then $"start_$1"; fi
     fi
     
 	echo ============================================
@@ -62,8 +62,9 @@ start(){
 	docker ps -a
 }
 
-update(){
+init(){
 	cp /vagrant/etc/docker.conf /etc/init/docker.conf
+	load_all
 }
 
 case "$1" in
@@ -88,14 +89,14 @@ case "$1" in
 	kill)
 		killz $2
 		;;
-	update)
-		update $2
+	init)
+		init
 		;;
 	status)
 		docker info
 		docker ps -a
 		;;
 	*)
-		echo $"Usage: $0 {list|start|stop|kill|update|restart|status}"
+		echo $"Usage: $0 {list|start|stop|kill|restart|status}"
 		RETVAL=1
 esac

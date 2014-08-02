@@ -110,10 +110,16 @@ Vagrant::VERSION >= "1.6.3" and Vagrant::Config.run do |config|
   config.vm.forward_port 8103, 8103
   config.vm.forward_port 8104, 8104
   
+  $bootstrap = <<-SCRIPT
+    sudo /vagrant/bin/dk stop
+    sudo /vagrant/bin/dk init
+    sudo /vagrant/bin/dk start
+  SCRIPT
+  
   # Installing Docker (latest) onto machine
   config.vm.provision :docker do |d|
   end
-  config.vm.provision :shell, :inline => "sudo /vagrant/bin/dk stop; sudo /vagrant/bin/dk update && sudo /vagrant/bin/dk start" 
+  config.vm.provision :shell, :inline => $bootstrap
 end
   
 

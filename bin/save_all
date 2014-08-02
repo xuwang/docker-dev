@@ -1,0 +1,7 @@
+#!/bin/bash
+
+for f in redis registry shipyard registry-ui agent ubuntu
+do
+    echo "Save localhost:5000/$f"
+    docker save localhost:5000/${f} | gzip -f > /vagrant/images/tarballs/${f}.tgz
+done

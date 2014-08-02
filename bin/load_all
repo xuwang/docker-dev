@@ -1,0 +1,15 @@
+#!/bin/bash
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
+
+for f in $SCRIPT_HOME/../images/tarballs/*.tgz
+do
+    fn=`basename ${f%.*}`
+    if ! has_local $fn
+    then 
+        echo Loading $f
+        gzip -c -d $f | docker load
+        docker tag localhost:5000/$fn $fn
+    fi
+done
