@@ -2,7 +2,7 @@
 
 ### Overview
 
-We are going to use a Ubuntu Vagrant VM as Docker host and manage the following applications in the docker environment:
+We are going to use a Ubuntu Vagrant VM as Docker host and us an orchestration script to manage the following applications in the docker environment:
 
 * Private local docker registry
 * Zookeeper - Zookeeper service
@@ -12,6 +12,8 @@ We are going to use a Ubuntu Vagrant VM as Docker host and manage the following 
 * Phpmyadmin - UI interface to the MySQL server
 * Sandbox - an container with mysql client to connect to mysql server, and kafkacat to demonstrate kafka consumer and producer to monitor logs
 
+....
+
 These are just examples to show how to setup your apps to run in this development environment. 
  
 ### Install VirtualBox and Vagrant
@@ -19,7 +21,7 @@ These are just examples to show how to setup your apps to run in this developmen
 Get the latest version for VirtualBox and Vagrant. This ensure that Vagrant has docker support:
 
 * Install VirtualBox: [VirtualBox download page](https://www.virtualbox.org/wiki/Downloads)
-* Install Vagrant: [Vagrant download page](http://www.vagrantup.com/downloads.html).
+* Install Vagrant: [Vagrant download page](http://www.vagrantup.com/downloads.html)
 * Install Vagrant Guest Additions Plugin
 
         vagrant plugin install vbguest
@@ -33,13 +35,13 @@ The following will clone the repository into your current directory under docker
 
 #### Fire up VM and update Dockers
 
-You can take a quick look at *Vagrantfile* under docker-dev. The vagrant configuration file tells vagrant to
-download docker ready ubuntu-14.04 image, configure port mappings for all the docker services that
-we will run in this environment, and start the services in their isolated contains after the VM is up.
+You can take a quick look at *Vagrantfile* under docker-dev. The vagrant configuration file tells Vagrant to
+download docker-ready ubuntu-14.04 image, configure port mappings for all the docker services that
+we will run in this environment, and start the services in their isolated containers after the VM is up.
 
         vagrant up
 
-The default docker processes that will be started are a private image registry service and a shipyard UI application to manage all contains running on the host.
+The default docker containers that will be started are a private image registry service and a shipyard UI application to manage all containers running on the host.
 
 #### Check docker status
     
@@ -58,31 +60,39 @@ The default docker processes that will be started are a private image registry s
 * Go to [http://localhost:5080](http://localhost:5080)
 
 
-### Manage applications
+### Manage dockers
 
-You manage dockers using bin/vdk without having to login to VM. vdk runs ssh and execute  bin/dk command in the VM.
+You can manage dockers using bin/vdk without having to login to VM. vdk run starts a vagrant ssh and execute bin/dk command in the VM.
 
-The following examples show how to use dk command within vagrant
+The following examples show how to use dk command within Vagrant docker server.  
 
-### Login to docker server
+### Login to docker server and run 'dk' command
 
         vagrant ssh
 
-*/vagrant/bin/dk* is available to let you easily manage all the services.
+*/vagrant/bin/dk* is available to let you easily manage dockers.
 
         sudo /vagrant/bin/dk help
 
-For example, if you want to start a redis service:
+For example, if you want to start a redis docker:
 
         sudo /vagrant/bin/dk start redis
 
-See all available dockers:
+See all available dockers pre-build for this development environment:
 
         sudo /vagrant/bin/dk list
 
-### How to add new application 
+Check status:
 
-Under /vagrant/bin directory, each *_start_app* is a wrapper around docker run command to setup the necessary container environment, service dependencies and then run "docker run" to start the docker. Here is an example of start_kafka. It checks if zookeeper is running, and start it if not, then run kafka:
+       sudo /vagrant/bin/dk list
+
+Stop all dockers:
+
+       sudo /vagrant/bin/dk stop
+
+### How to add new docker application 
+
+Under /vagrant/bin directory, each *start_app* is a wrapper around docker run command to setup the necessary container environment, service dependencies and then run "docker run" to start the docker. Here is an example of start_kafka. It checks if zookeeper is running, and starts it if not, then runs kafka:
 	
 	#!/bin/bash
 
@@ -115,9 +125,11 @@ Under /vagrant/bin directory, each *_start_app* is a wrapper around docker run c
 	echo "Started KAFKA in container $KAFKA"
 
 
-If you add new a container, make sure you add them as bin/start-app script to allow script for enabling auto provisioning. To run your app in a container:
+If you add new a container, make sure you name it as bin/start-\<app\> script to enable auto provisioning. To run your app in a container:
 
         /vagrant/bin/dk start <app-name>
+
+When building your own docker, put the command 'dockbuild_if_missing \<app-name\>' at the top of the start\_<app-name\> script. _dockbuild\_if\_missing_ will look for build files under _images_  directory and build docker image according to the specs. 
 
 ### Update, Stop, Tear Down, Etc.
 
