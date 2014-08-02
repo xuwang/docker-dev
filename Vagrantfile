@@ -111,6 +111,7 @@ Vagrant::VERSION >= "1.6.3" and Vagrant::Config.run do |config|
   config.vm.forward_port 8104, 8104
   
   $bootstrap = <<-SCRIPT
+    cat /vagrant/bin/bash_profile >> .bash_profile
     sudo /vagrant/bin/dk stop
     sudo /vagrant/bin/dk init
     sudo /vagrant/bin/dk start

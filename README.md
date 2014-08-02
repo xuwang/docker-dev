@@ -42,21 +42,28 @@ we will run in this environment, and start the services in their isolated contai
 The default docker processes that will be started are a private image registry service and a shipyard UI application to manage all contains running on the host.
 
 #### Check docker status
-    
-        ./bin/vdk status
+Now the Docker Host VM is ready and you can ssh to it and check the docker status:
 
-### Configure The Docker Web UI: Shipyard
+		vagrant ssh
+		sudo dk status
 
-[Shipyard](http://localhost:8005/) should be up by now. The credentials are "admin/shipyard".
+### Start The Docker Web UI: Shipyard:
 
-* Go to http://localhost:8005/hosts/ to enable docker hosts.
+You can start up [Shipyard](https://github.com/shipyard/shipyard):
+
+		sudo dk start shipyard
+
+Go to http://localhost:8005/hosts/ to enable docker hosts (the credentials are "admin/shipyard".).
 
 ### Docker Local Registry Web UI: docker-registry-ui
 
+If you want to run you own local docker registry, simply:
+
+		sudo dk start registry-ui
+		
 [docker-registry-ui](https://github.com/atc-/docker-registry-web) should also be up by now.
 
-* Go to [http://localhost:5080](http://localhost:5080)
-
+Go to [http://localhost:5080](http://localhost:5080)
 
 ### Manage applications
 
@@ -70,19 +77,21 @@ The following examples show how to use dk command within vagrant
 
 */vagrant/bin/dk* is available to let you easily manage all the services.
 
-        sudo /vagrant/bin/dk help
+        sudo dk help
 
 For example, if you want to start a redis service:
 
-        sudo /vagrant/bin/dk start redis
+        sudo dk start redis
 
 See all available dockers:
 
-        sudo /vagrant/bin/dk list
+        sudo dk list
 
 ### How to add new application 
 
-Under /vagrant/bin directory, each *_start_app* is a wrapper around docker run command to setup the necessary container environment, service dependencies and then run "docker run" to start the docker. Here is an example of start_kafka. It checks if zookeeper is running, and start it if not, then run kafka:
+Under /vagrant/bin directory, each *_start_app* is a wrapper around docker run command to setup the necessary container environment, service dependencies and then run "docker run" to start the docker. 
+
+Here is an example of start_kafka. It checks if zookeeper is running, and start it if not, then run kafka:
 	
 	#!/bin/bash
 
@@ -117,7 +126,7 @@ Under /vagrant/bin directory, each *_start_app* is a wrapper around docker run c
 
 If you add new a container, make sure you add them as bin/start-app script to allow script for enabling auto provisioning. To run your app in a container:
 
-        /vagrant/bin/dk start <app-name>
+        sudo dk start <app-name>
 
 ### Update, Stop, Tear Down, Etc.
 

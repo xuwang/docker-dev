@@ -2,6 +2,7 @@
 .vagrant
 registry/docker
 registry/docker-registry.db
+images/tarballs/*
 foo
 bar
 out
