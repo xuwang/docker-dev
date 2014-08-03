@@ -2,33 +2,24 @@ Use Private Docker Registry
 ================================
 
 ### Start the registry
-```
-vagrant ssh		# ssh to the docker host VM
 
-bin/db start registry
+		vagrant ssh		# ssh to the docker host VM
+		sudo dk start registry
 
-```
+### push a image
 
-### Tag a image and push
-```
-docker tag <image> :5000/<image_name>:[TAG]
-
-docker push :5000/<image_name>
-
-```
+		dockpush <iamge_name>
 
 ### Search
-```
-curl  http://localhost:5000/v1/search?q= | python -m json.tool
-```
+
+		curl  http://localhost:5000/v1/search?q= | python -m json.tool
 
 ### Pull
-```
-docker pull :5000/<image_name>
-```
+
+		dockpull <image_name>
+
 
 ### Stop the registry
-```
-bin/db stop registry
 
-```
+	sudo dk stop registry
+
