@@ -7,5 +7,5 @@ dockbuild openjdk7-jre
 
 for dir in $SCRIPT_HOME/../images/*/
 do
-    dockbuild $dir
+    dockbuild `basename $dir`
 done
