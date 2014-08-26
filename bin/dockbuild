@@ -12,7 +12,7 @@ then
     cd $IMAGE_DIR
     echo "Building $1"
     docker build -t $1 . &&
-    docker tag $1 localhost:5000/$1
+    #docker tag $1 localhost:5000/$1
     exit 0
 else
     echo "Build $IMAGE_DIR failed"
