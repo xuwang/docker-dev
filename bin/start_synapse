@@ -10,9 +10,9 @@ dockbuild_if_missing nodeapp
 dockbuild_if_missing synapse
 
 # start 3 nodeapp servers
-docker run -d -p 8000 -h nodeapp-01 ndoeapp
-docker run -d -p 8000 -h nodeapp-02 ndoeapp
-docker run -d -p 8000 -h nodeapp-03 ndoeapp
+docker run -d -p 8000 -h nodeapp-01 nodeapp
+docker run -d -p 8000 -h nodeapp-02 nodeapp
+docker run -d -p 8000 -h nodeapp-03 nodeapp
 
 # start the load balancer 
 SYN=$(docker run \
