@@ -1,0 +1,25 @@
+#!/bin/bash
+
+APPS=${APPS:-/mnt/apps}
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
+
+#build first
+dockbuild_if_missing nodeapp
+dockbuild_if_missing synapse
+
+# start 3 nodeapp servers
+docker run -d -p 8000 -h nodeapp-01 ndoeapp
+docker run -d -p 8000 -h nodeapp-02 ndoeapp
+docker run -d -p 8000 -h nodeapp-03 ndoeapp
+
+# start the load balancer 
+SYN=$(docker run \
+    -p 8080:8080 \
+    --name synapse \
+    -d \
+    synapse
+    )
+echo "Started load balancer in container $SYN
+to see it's working: curl http://localhost:8080"
