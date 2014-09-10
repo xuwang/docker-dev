@@ -35,13 +35,10 @@ Vagrant::VERSION >= "1.6.3" and Vagrant::Config.run do |config|
   #elasticsearch
   config.vm.forward_port 9200, 9200
   config.vm.forward_port 9300, 9300
-
-  #cassandra
-  config.vm.forward_port 7000, 7000
+  
+  #etcd
   config.vm.forward_port 7001, 7001
-  config.vm.forward_port 7199, 7199
-  config.vm.forward_port 9160, 9160
-  config.vm.forward_port 9042, 9042
+  config.vm.forward_port 4001, 4001
 
   #mongo
   config.vm.forward_port 27017, 27017

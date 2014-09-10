@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# See http://adetante.github.io/articles/service-discovery-with-docker-2
+
+set -e #-x
+
+APPS=${APPS:-/mnt/apps}
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
+
+#build first
+dockbuild_if_missing nodeapp-etcd
+
+if ! is_running etcd; then start_etcd; fi
+
+NODE_IP=${NODE_IP=`/sbin/ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}'`}
+
+NODEAPP=$(docker run \
+	-d \
+	-p 8000 \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-e IP=$NODE_IP \
+	--link etcd:etcd \
+		nodeapp-etcd
+	)
+
+echo "Started nodeapp-etcd in container $NODEAPP"

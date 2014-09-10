@@ -1,0 +1,20 @@
+#!/bin/bash
+
+APPS=${APPS:-/mnt/apps}
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+. $SCRIPT_HOME/env.sh
+
+NODE_NAME=${NODE_NAME="host-1"}
+NODE_IP=${NODE_IP=`/sbin/ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}'`}
+PEERS=${PEERS=""}
+
+echo "Download and run etcd container"
+ETCD=$(docker run \
+	-p 4001:4001 \
+	-p 7001:7001 \
+	-d 			\
+	--name etcd \
+	coreos/etcd -name "$NODE_NAME" -peer-addr $NODE_IP:7001 -addr $NODE_IP:4001 $PEERS
+    )
+echo "Started etcd in container $ETCD"
