@@ -1,0 +1,32 @@
+#! /bin/sh -e
+ 
+# See
+# http://blog.docker.com/2014/06/why-you-dont-need-to-run-sshd-in-docker/
+# https://github.com/jpetazzo/nsenter
+
+case "$1" in
+  -h|--help)
+    echo "Usage: docker-enter CONTAINER"
+    exit 0
+    ;;
+esac
+ 
+if [ $(id -ru) -ne 0 ]; then
+  echo "You have to be root."
+  exit 1
+fi
+
+if [ ! -f /usr/local/bin/nsenter ]; then
+    echo "nsenter: not found, installing..."
+    docker run -v /usr/local/bin:/target jpetazzo/nsenter
+fi
+ 
+if [ $# -ne 1 ]; then
+  echo "Usage: docker-enter CONTAINER"
+  exit 1
+fi
+ 
+PID=$(docker inspect --format {{.State.Pid}} "$1")
+nsenter --target $PID --mount --uts --ipc --net --pid
+ 
+exit 0
