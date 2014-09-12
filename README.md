@@ -44,31 +44,21 @@ we will run in this environment, and start the services in their isolated contai
 The default docker containers that will be started are a private image registry service and a shipyard UI application to manage all containers running on the host.
 
 #### Check docker status
-Now the Docker Host VM is ready and you can ssh to it and check the docker status:
+    
+        ./bin/vdk status
 
-		vagrant ssh
-		sudo dk status
+### Configure The Docker Web UI: Shipyard
 
-### Start The Docker Web UI: Shipyard
+[Shipyard](http://localhost:8005/) should be up by now. The credentials are "admin/shipyard".
 
-You can start up Shipyar:
-
-		sudo dk start shipyard
-
-Go to shipyard hosts page (http://localhost:8005/hosts/) to enable docker host management
-(the credentials are "admin/shipyard").
-
-See [Shipyard](https://github.com/shipyard/shipyard) for details
+* Go to http://localhost:8005/hosts/ to enable docker hosts.
 
 ### Docker Local Registry Web UI: docker-registry-ui
 
-If you like to run you own local docker registry, do:
+[docker-registry-ui](https://github.com/atc-/docker-registry-web) should also be up by now.
 
-		sudo dk start registry-ui
+* Go to [http://localhost:5080](http://localhost:5080)
 
-Go to docker-registry-ui (http://localhost:5080)
-		
-See [docker-registry-ui](https://github.com/atc-/docker-registry-web) for details.
 
 ### Manage dockers
 
@@ -82,15 +72,15 @@ The following examples show how to use dk command within Vagrant docker server.
 
 */vagrant/bin/dk* is available to let you easily manage dockers.
 
-        sudo dk help
+        sudo /vagrant/bin/dk help
 
 For example, if you want to start a redis docker:
 
-        sudo dk start redis
+        sudo /vagrant/bin/dk start redis
 
 See all available dockers pre-build for this development environment:
 
-        sudo dk list
+        sudo /vagrant/bin/dk list
 
 Check status:
 
@@ -102,9 +92,7 @@ Stop all dockers:
 
 ### How to add new docker application 
 
-Under /vagrant/bin directory, each *start_app* is a wrapper around docker run command to setup the necessary container environment, service dependencies and then run "docker run" to start the docker. 
-
-Here is an example of start_kafka. It checks if zookeeper is running, and starts it if not, then runs kafka:
+Under /vagrant/bin directory, each *start_app* is a wrapper around docker run command to setup the necessary container environment, service dependencies and then run "docker run" to start the docker. Here is an example of start_kafka. It checks if zookeeper is running, and starts it if not, then runs kafka:
 	
 	#!/bin/bash
 
@@ -139,7 +127,7 @@ Here is an example of start_kafka. It checks if zookeeper is running, and starts
 
 If you add new a container, make sure you name it as bin/start-\<app\> script to enable auto provisioning. To run your app in a container:
 
-        sudo dk start <app-name>
+        /vagrant/bin/dk start <app-name>
 
 When building your own docker, put the command 'dockbuild_if_missing \<app-name\>' at the top of the start\_<app-name\> script. _dockbuild\_if\_missing_ will look for build files under _images_  directory and build docker image according to the specs. 
 
