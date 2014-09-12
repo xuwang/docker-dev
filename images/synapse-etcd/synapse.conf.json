@@ -23,7 +23,7 @@
     "%%SYNAPSE_APP%%": {
       "discovery": {
         "method": "etcd",
-        "path":  "/nerve/services/%%SYNAPSE_APP%%",
+        "path":  "/services/%%SYNAPSE_APP%%",
         "host": "%%ETCD_HOST%%",
         "port": %%ETCD_PORT%%
       },

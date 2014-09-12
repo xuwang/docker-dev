@@ -14,15 +14,16 @@ dockbuild_if_missing nodeapp-etcd
 
 if ! is_running etcd; then start_etcd; fi
 
-NODE_IP=${NODE_IP=`/sbin/ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}'`}
+# for multi-host use the host ip as the service ip vs container's ip
+# SERVICE_IP=${NODE_IP=`/sbin/ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}'`}
+# SERVICE_PORT=<host port of the service>
+# docker run -d -p ${SERVICE_PORT}:8000 --link etcd:etcd -e SERVICE_IP=$SERVICE_IP -e SERVICE_PORT=$SERVICE_PORT
 
 NODEAPP=$(docker run \
 	-d \
 	-p 8000 \
-	-v /var/run/docker.sock:/var/run/docker.sock \
-	-e IP=$NODE_IP \
 	--link etcd:etcd \
-		nodeapp-etcd
+	nodeapp-etcd
 	)
 
 echo "Started nodeapp-etcd in container $NODEAPP"

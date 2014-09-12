@@ -4,17 +4,21 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # install sshd and other tool sets
 RUN apt-get update
-RUN apt-get install -y curl wget nodejs
-RUN apt-get install -y supervisor
+RUN apt-get install -y curl wget nodejs supervisor git-core golang && \
+	apt-get clean
+	
+RUN git clone https://github.com/coreos/etcdctl.git; \
+		cd etcdctl;./build; \
+		cp bin/etcdctl /usr/bin/etcdctl; \
+		cd ..;\
+		rm -r etcdctl
 	
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-ADD dockreg /usr/bin/dockreg
+ADD appreg.sh /appreg.sh
 ADD server.js /server.js
-ADD run.sh /run.sh
-RUN chmod a+x /usr/bin/dockreg
-RUN chmod a+x /run.sh
+RUN chmod a+x /appreg.sh
 
 EXPOSE 8000
 
-CMD ["/run.sh"]
+CMD ["/usr/bin/supervisord"]
