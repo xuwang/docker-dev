@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+#  This script will stop all running containers, remove them, and remove
+#  docker images from the system so you can start from sctatch
+
+containers=$(docker ps -a -q)
+[ ! -z "$containers" ] && docker stop $containers && docker rm $containers
+
+images=$(docker images -a -q)
+[ ! -z "$images" ] && docker rmi -f $images
